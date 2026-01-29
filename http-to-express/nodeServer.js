@@ -7,6 +7,14 @@ const server = http.createServer((req, res) => {
   } else if (req.url === '/api/data' && req.method === 'GET') {
     res.writeHead(200, { 'content-type': 'application/json' });
     res.end(JSON.stringify({ message: 'Success', data: [] }));
+  } else if (req.url === '/data' && req.method === 'POST') {
+    let body = '';
+    req.on('data', (chunk) => (body += chunk.toString()));
+    req.on('end', () => {
+      const data = JSON.parse(body);
+      res.writeHead(201, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ status: 'Created', received: data }));
+    });
   } else {
     res.writeHead(404);
     res.end('Not found');
